@@ -80,6 +80,17 @@ order by numero_de_veces_comprado desc</code></pre>
 									<h3>Consulta 2:¿Cuántos clientes han comprado productos de un rango de precios específico?
 </h3>
 									<p>Para esta consulta lo primero que hice fue relacionar las 3 tablas y luego restringi los precios a un rango entre 10000 y 20000 para que me muestre cuantos clientes compraron productos de precios especificos dentro de ese rango
+									<pre><code>WITH clientes_compras AS(
+  SELECT *
+  FROM `earthlover117.earth_clientes`cli INNER JOIN `earthlover117.earth_compras`com ON cli.numero=com.cliente),
+  clientes_compras_productos AS (
+    SELECT cliente, precio
+    FROM clientes_compras cyp INNER JOIN `earthlover117.earth_productos`prod ON cyp.producto=prod.codigo
+  )
+  SELECT count(cliente)AS cantidad_compras_por_precio, precio
+  FROM clientes_compras_productos
+  WHere (precio>10000 AND precio<20000)
+  GROUP BY precio</code></pre>
 									<ul class="actions">
 										
 									</ul>
