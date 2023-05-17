@@ -126,6 +126,33 @@ ORDER BY cantidad_de_compras_en_total DESC</code></pre>
 							</div>
 						</section>
 					</section>
+						<div class="content">
+								<div class="inner">
+									<h3>Consulta 3:¿Cuáles son los clientes más frecuentes en realizar compras y cuánto han gastado en total?
+</h3>
+									<p>Para esta consulta relacione las 3 tablas y primero conte la cantidad de registros para cada cliente para mostrar primero los que tengan mas compras registradas, luego con eso en cuenta sume todos los precios de los productos adquiridos para mostrar cuanto dinero han gastado en total</p>
+									<pre><code>WITH clientes_compras AS (
+SELECT Apellidos, Nombre_1, Nombre_2, com.producto, Numero
+FROM `earthlover117.earth_clientes` cli  INNER JOIN `earthlover117.earth_compras` com ON cli.numero=com.cliente),
+
+
+clientes_compras_producto AS (
+SELECT cic.*, pro.Precio, pro.Producto
+FROM clientes_compras cic INNER JOIN `earthlover117.earth_productos` pro ON cic.producto=pro.Codigo
+)
+
+
+SELECT Apellidos, Nombre_1, Nombre_2,  COUNT(Numero) AS cantidad_de_compras_en_total, SUM(Precio) AS compras_totales_en_dinero
+FROM clientes_compras_producto
+GROUP BY Apellidos, Nombre_1, Nombre_2
+ORDER BY cantidad_de_compras_en_total DESC</code></pre>
+									<ul class="actions">
+										
+									</ul>
+								</div>
+							</div>
+						</section>
+					</section>
 						
 		</section>
 					
