@@ -156,22 +156,22 @@ order by numero_de_veces_comprado desc</code></pre>
 									<h3>Consulta 5:¿Cuáles son los clientes que han comprado todos los productos disponibles?
 
 </h3>
-									<p>Para esta consulta relacione las 3 tablas y primero conte la cantidad de registros para cada cliente para mostrar primero los que tengan mas compras registradas, luego con eso en cuenta sume todos los precios de los productos adquiridos para mostrar cuanto dinero han gastado en total</p>
-									<pre><code>WITH clientes_compras AS (
-SELECT Apellidos, Nombre_1, Nombre_2, com.producto, Numero
-FROM `earthlover117.earth_clientes` cli  INNER JOIN `earthlover117.earth_compras` com ON cli.numero=com.cliente),
-
-
-clientes_compras_producto AS (
-SELECT cic.*, pro.Precio, pro.Producto
-FROM clientes_compras cic INNER JOIN `earthlover117.earth_productos` pro ON cic.producto=pro.Codigo
+									<p>Para realizar esta consulta tuve en cuenta que no habia un cliente que haya comprado los 21 productos, asi que base mi consulta en la cantidad de clientes que han comprado almenos 10 productos de los 21 disponibles ya que esta es la cantidad mayor que hay</p>
+									<pre><code>WITH productos_compras AS (
+SELECT DISTINCT cliente, Codigo, COUNT(prod.producto) AS compras_producto
+FROM `earthlover117.earth_compras` com INNER JOIN `earthlover117.earth_productos` prod ON prod.Codigo=com.producto
+GROUP BY cliente, Codigo
+ORDER BY cliente ),
+prod_por_cliente AS (
+SELECT cliente, COUNT(Codigo) AS cantidad_productos_disponibles_comprados
+FROM productos_compras
+GROUP BY cliente
 )
 
-
-SELECT Apellidos, Nombre_1, Nombre_2,  COUNT(Numero) AS cantidad_de_compras_en_total, SUM(Precio) AS compras_totales_en_dinero
-FROM clientes_compras_producto
-GROUP BY Apellidos, Nombre_1, Nombre_2
-ORDER BY cantidad_de_compras_en_total DESC</code></pre>
+SELECT DISTINCT cliente, Nombre_1 AS Nombre, Apellidos, cantidad_productos_disponibles_comprados
+FROM prod_por_cliente ppc INNER JOIN `earthlover117.earth_clientes` cli ON ppc.cliente = cli.Numero
+WHERE cantidad_productos_disponibles_comprados = 10
+ORDER BY cliente</code></pre>
 									<ul class="actions">
 										
 									</ul>
