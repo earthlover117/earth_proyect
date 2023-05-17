@@ -128,24 +128,21 @@ ORDER BY cantidad_de_compras_en_total DESC</code></pre>
 					</section>
 						<div class="content">
 								<div class="inner">
-									<h3>Consulta 3:¿Cuáles son los clientes más frecuentes en realizar compras y cuánto han gastado en total?
+									<h3>Consulta 4:¿Cuál es el producto más vendido en cada ubicación geográfica?
 </h3>
-									<p>Para esta consulta relacione las 3 tablas y primero conte la cantidad de registros para cada cliente para mostrar primero los que tengan mas compras registradas, luego con eso en cuenta sume todos los precios de los productos adquiridos para mostrar cuanto dinero han gastado en total</p>
-									<pre><code>WITH clientes_compras AS (
-SELECT Apellidos, Nombre_1, Nombre_2, com.producto, Numero
-FROM `earthlover117.earth_clientes` cli  INNER JOIN `earthlover117.earth_compras` com ON cli.numero=com.cliente),
+									<p>Esta consulta fue muy similar a la primera sin embargo esta vez no hubo restricciones por lo tanto use los datos de las latitudes y longitudes de todos los clientes, asi en looker studio dentro del mapa se puede escoger individualmente cada comprador y ver cuantos productos adquirio</p>
+									<pre><code>WITH clientes_compras AS (SELECT *
+FROM `earthlover117.earth_clientes`cli INNER JOIN `earthlover117.earth_compras` com ON cli.Numero=com.cliente),
+clientes_compras_productos AS (
+  SELECT  cliente,cyp.producto AS codigo_producto, prod.producto, latitude AS latitud, longitude AS longitud
+  from clientes_compras cyp INNER JOIN `earthlover117.earth_productos` prod ON cyp.producto=prod.Codigo
 
-
-clientes_compras_producto AS (
-SELECT cic.*, pro.Precio, pro.Producto
-FROM clientes_compras cic INNER JOIN `earthlover117.earth_productos` pro ON cic.producto=pro.Codigo
 )
 
-
-SELECT Apellidos, Nombre_1, Nombre_2,  COUNT(Numero) AS cantidad_de_compras_en_total, SUM(Precio) AS compras_totales_en_dinero
-FROM clientes_compras_producto
-GROUP BY Apellidos, Nombre_1, Nombre_2
-ORDER BY cantidad_de_compras_en_total DESC</code></pre>
+select COUNT(cliente)AS numero_de_veces_comprado , codigo_producto, producto, latitud, longitud
+FROM clientes_compras_productos
+Group by codigo_producto, producto, latitud, longitud
+order by numero_de_veces_comprado desc</code></pre>
 									<ul class="actions">
 										
 									</ul>
@@ -156,7 +153,8 @@ ORDER BY cantidad_de_compras_en_total DESC</code></pre>
 							
 							<div class="content">
 								<div class="inner">
-									<h3>Consulta 3:¿Cuáles son los clientes más frecuentes en realizar compras y cuánto han gastado en total?
+									<h3>Consulta 5:¿Cuáles son los clientes que han comprado todos los productos disponibles?
+
 </h3>
 									<p>Para esta consulta relacione las 3 tablas y primero conte la cantidad de registros para cada cliente para mostrar primero los que tengan mas compras registradas, luego con eso en cuenta sume todos los precios de los productos adquiridos para mostrar cuanto dinero han gastado en total</p>
 									<pre><code>WITH clientes_compras AS (
