@@ -126,32 +126,7 @@ ORDER BY cantidad_de_compras_en_total DESC</code></pre>
 							</div>
 						</section>
 					</section>
-						</section>
-				
-							
-							<div class="content">
-								<div class="inner">
-									<h3>Consulta 4:¿Cuál es el producto más vendido en cada ubicación geográfica?
-</h3>
-									<p>Esta consulta fue muy similar a la primera sin embargo esta vez no hubo restricciones por lo tanto use los datos de las latitudes y longitudes de todos los clientes, asi en looker studio dentro del mapa se puede escoger individualmente cada comprador y ver cuantos productos adquirio</p>
-									<pre><code>WITH clientes_compras AS (SELECT *
-FROM `earthlover117.earth_clientes`cli INNER JOIN `earthlover117.earth_compras` com ON cli.Numero=com.cliente),
-clientes_compras_productos AS (
-  SELECT  cliente,cyp.producto AS codigo_producto, prod.producto, latitude AS latitud, longitude AS longitud
-  from clientes_compras cyp INNER JOIN `earthlover117.earth_productos` prod ON cyp.producto=prod.Codigo
-
-)
-
-select COUNT(cliente)AS numero_de_veces_comprado , codigo_producto, producto, latitud, longitud
-FROM clientes_compras_productos
-Group by codigo_producto, producto, latitud, longitud
-order by numero_de_veces_comprado desc</code></pre>
-									<ul class="actions">
-										
-									</ul>
-								</div>
-							</div>
-						</section>
+						
 		</section>
 					
 
